@@ -14,7 +14,7 @@ function DogsPanel() {
     }
   }, []);
 
-  const renderDogs = () => dogs.map((dog) => <img width="20" src={dog.value} key={dog.key} alt="random dog" />);
+  const renderDogs = () => dogs.map((dog) => <img width="30" src={dog.value} key={dog.key} alt="random dog" />);
 
   const getMoreDogs = async () => {
     try {
@@ -26,6 +26,12 @@ function DogsPanel() {
       console(error);
     }
   };
+
+  useEffect(() => {
+    if (dogs.length > 2) {
+      setRendered([dogs.length - 3, dogs.length - 2, dogs.length - 1]);
+    }
+  }, [dogs]);
 
   const carousel = () => rendered.map((_, index) => {
     const imgSrc = dogs[rendered[index]].value;
@@ -71,7 +77,7 @@ function DogsPanel() {
   );
 
   return (
-    <div>{dogs.length > 2 ? renderContent() : <div>Loading...</div> }</div>
+    <div>{dogs.length ? renderContent() : <div>Loading...</div> }</div>
   );
 }
 
