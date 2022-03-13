@@ -2,3 +2,7 @@
   display: flex;
   height: 300px;
 }
+
+.carouselDog {
+  max-height: 300px;
+}

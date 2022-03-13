@@ -36,7 +36,7 @@ function DogsCarousel() {
   const carousel = () => rendered.map((_, index) => {
     const imgSrc = dogs[rendered[index]].value;
     return (
-      <img key={dogs[rendered[index]].key} width="200" max-height="300" src={imgSrc} alt="dog in carousel" />
+      <img className="carouselDog" key={dogs[rendered[index]].key} width="200" max-height="300" src={imgSrc} alt="dog in carousel" />
     );
   });
 
