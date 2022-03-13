@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchInitialDogs, fetchMoreDogs } from './API';
+import { fetchInitialDogs, fetchMoreDogs } from '../API';
 
-function DogsPanel() {
+function DogsCarousel() {
   const [dogs, setDogs] = useState([]);
   const [rendered, setRendered] = useState([0, 1, 2]);
 
@@ -81,4 +81,4 @@ function DogsPanel() {
   );
 }
 
-export default DogsPanel;
+export default DogsCarousel;

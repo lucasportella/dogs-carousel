@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Carousel() {
+function RawCarousel() {
   const alphabet = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [spinners, setSpinners] = useState([0, 1, 2]);
 
@@ -28,4 +28,4 @@ function Carousel() {
   );
 }
 
-export default Carousel;
+export default RawCarousel;
