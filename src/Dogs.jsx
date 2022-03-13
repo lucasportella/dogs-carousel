@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import fetch from './API';
 
 function DogsPanel() {
   const [dogs, setDogs] = useState([]);
-  const [rendered, setRendered] = useState([0, 1, 2]);
+  const [rendered, setRendered] = useState([]);
 
-  const renderDogs = () => (
-    dogs.map((dog) => <img src={dog} alt="random dog" />)
-  );
+  const renderDogs = () => dogs.map((dog) => <img src={dog.value} key={dog.key} alt="random dog" />);
 
   const getMoreDogs = async () => {
     try {
       const request = await fetch();
       if (request.data.status === 'success') {
-        setDogs([...dogs, request.data.message]);
+        setDogs([...dogs, { value: request.data.message, key: uuidv4() }]);
+      }
+      if (dogs.length === 4) {
+        setRendered([0, 1, 2]);
       }
     } catch (error) {
-      alert('erro, tente novamente');
+      console(error);
     }
   };
 
   const carousel = () => {
-    if (dogs.length > 2) {
+    if (dogs.length > 3) {
       return rendered.map((_, index) => {
-        const imgSrc = dogs[rendered[index]];
+        const imgSrc = dogs[rendered[index]].value;
         return (
-          <img width="200" src={imgSrc} alt="dog in carousel" />
+          <img key={dogs[rendered[index]].key} width="200" src={imgSrc} alt="dog in carousel" />
         );
       });
     }
@@ -33,32 +35,31 @@ function DogsPanel() {
   };
 
   const carouselSpinner = () => {
-    // console.log(`RENDERED${rendered[2]}`);
-    // console.log(`dogs ${dogs.length - 1}`);
-    if (rendered[2] === dogs.length - 1) {
-      setRendered([0, 1, 2]);
-    } else {
-      const actualRendered = rendered;
-      const updatedRendered = actualRendered.map((renderIndex) => renderIndex + 1);
-      setRendered(updatedRendered);
+    const actualRendered = JSON.parse(JSON.stringify(rendered));
+    for (let i = 0; i < actualRendered.length; i += 1) {
+      if (actualRendered[i] === dogs.length - 1) {
+        actualRendered[i] = 0;
+      } else {
+        actualRendered[i] += 1;
+      }
     }
+    setRendered(actualRendered);
   };
 
   useEffect(() => {
     let carouselInterval;
-    if (dogs.length > 2) {
+    if (dogs.length > 3) {
       carouselInterval = setInterval(() => {
         carouselSpinner();
       }, 3000);
       return () => clearInterval(carouselInterval);
     }
     return undefined;
-  });
+  }, [rendered]);
 
   return (
     <div>
       <h1>Dogs</h1>
-      {console.log('UPDATED')}
       <div className="dogsCarousel">
         <button type="button">{'<'}</button>
         {dogs.length > 2 ? carousel() : null}
