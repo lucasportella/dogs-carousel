@@ -14,7 +14,18 @@ function Carousel() {
     return () => clearInterval(carouselInterval);
   }, [spinners]);
 
-  return (spinners.map((index) => <div>{alphabet[index]}</div>));
+  return (
+    <div>
+      <div>Pure logical html carousel:</div>
+      {' '}
+      {spinners.map((index) => (
+        <span>
+          {' '}
+          {alphabet[index]}
+        </span>
+      ))}
+    </div>
+  );
 }
 
 export default Carousel;

@@ -59,7 +59,8 @@ function DogsPanel() {
 
   return (
     <div>
-      <h1>Dogs</h1>
+      <div>Dynamic carousel rendering data from API with html:</div>
+      <h3>Dogs</h3>
       <div className="dogsCarousel">
         <button type="button">{'<'}</button>
         {dogs.length > 2 ? carousel() : null}
