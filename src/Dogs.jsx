@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import fetch from './API';
+import { fetchInitialDogs, fetchMoreDogs } from './API';
 
 function DogsPanel() {
   const [dogs, setDogs] = useState([]);
-  const [rendered, setRendered] = useState([]);
+  const [rendered, setRendered] = useState([0, 1, 2]);
 
-  const renderDogs = () => dogs.map((dog) => <img src={dog.value} key={dog.key} alt="random dog" />);
+  useEffect(async () => {
+    const { data } = await fetchInitialDogs();
+    const initialDogs = data.message.map((dog) => ({ value: dog, key: uuidv4() }));
+    if (data.status === 'success') {
+      setDogs(initialDogs);
+    }
+  }, []);
+
+  const renderDogs = () => dogs.map((dog) => <img width="20" src={dog.value} key={dog.key} alt="random dog" />);
 
   const getMoreDogs = async () => {
     try {
-      const request = await fetch();
+      const request = await fetchMoreDogs();
       if (request.data.status === 'success') {
         setDogs([...dogs, { value: request.data.message, key: uuidv4() }]);
-      }
-      if (dogs.length === 4) {
-        setRendered([0, 1, 2]);
       }
     } catch (error) {
       console(error);
     }
   };
 
-  const carousel = () => {
-    if (dogs.length > 3) {
-      return rendered.map((_, index) => {
-        const imgSrc = dogs[rendered[index]].value;
-        return (
-          <img key={dogs[rendered[index]].key} width="200" src={imgSrc} alt="dog in carousel" />
-        );
-      });
-    }
-    return null;
-  };
+  const carousel = () => rendered.map((_, index) => {
+    const imgSrc = dogs[rendered[index]].value;
+    return (
+      <img key={dogs[rendered[index]].key} width="200" src={imgSrc} alt="dog in carousel" />
+    );
+  });
 
   const carouselSpinner = () => {
     const actualRendered = JSON.parse(JSON.stringify(rendered));
@@ -47,28 +47,31 @@ function DogsPanel() {
   };
 
   useEffect(() => {
-    let carouselInterval;
-    if (dogs.length > 3) {
-      carouselInterval = setInterval(() => {
+    if (dogs.length) {
+      const carouselInterval = setInterval(() => {
         carouselSpinner();
       }, 3000);
       return () => clearInterval(carouselInterval);
     }
-    return undefined;
-  }, [rendered]);
+    return null;
+  });
 
-  return (
+  const renderContent = () => (
     <div>
-      <div>Dynamic carousel rendering data from API with html:</div>
+      <div>Dynamic carousel rendering data from API:</div>
       <h3>Dogs</h3>
       <div className="dogsCarousel">
         <button type="button">{'<'}</button>
-        {dogs.length > 2 ? carousel() : null}
+        <div>{carousel()}</div>
         <button type="button">{'>'}</button>
       </div>
       <button type="button" onClick={getMoreDogs}>Get more dogs</button>
-      {dogs.length > 0 ? <div>{renderDogs()}</div> : null}
+      {renderDogs()}
     </div>
+  );
+
+  return (
+    <div>{dogs.length > 2 ? renderContent() : <div>Loading...</div> }</div>
   );
 }
 

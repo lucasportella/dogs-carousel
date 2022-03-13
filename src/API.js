@@ -1,5 +1,7 @@
 import axios from 'axios';
 
-const fetch = async () => axios.get('https://dog.ceo/api/breeds/image/random');
+const fetchInitialDogs = async () => axios.get('https://dog.ceo/api/breeds/image/random/3');
 
-export default fetch;
+const fetchMoreDogs = async () => axios.get('https://dog.ceo/api/breeds/image/random');
+
+export { fetchInitialDogs, fetchMoreDogs };
