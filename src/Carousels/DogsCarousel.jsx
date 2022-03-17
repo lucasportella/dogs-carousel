@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom';
 import { fetchInitialDogs, fetchMoreDogs } from '../API';
 
 function DogsCarousel() {
@@ -14,7 +15,7 @@ function DogsCarousel() {
     }
   }, []);
 
-  const renderDogs = () => dogs.map((dog) => <img width="30" src={dog.value} key={dog.key} alt="random dog" />);
+  const renderDogs = () => dogs.map((dog) => <Link to={`/dog/${dog.key}`} state={{ url: dog.value }}><img width="30" src={dog.value} key={dog.key} alt="random dog" /></Link>);
 
   const getMoreDogs = async () => {
     try {
