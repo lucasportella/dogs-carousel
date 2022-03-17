@@ -6,3 +6,11 @@
 .carouselDog {
   max-height: 300px;
 }
+
+.bootstrapCarouselFather {
+  text-align: center;
+}
+
+.carouselImg {
+  text-align: center;
+}
